@@ -22,6 +22,7 @@ wheels/
 
 # Environment files
 .env
+backend/.env
 .venv
 env/
 venv/
