@@ -1,7 +1,9 @@
 Flask
-tensorflow
 numpy
 Pillow
 python-multipart
-uvicorn
-fastapi
+python-dotenv
+openai
+requests
+flask-swagger-ui
+flask-cors

@@ -1,0 +1,18 @@
+{
+  "total_classifications": 3,
+  "categories": {
+    "perro": {
+      "count": 3,
+      "avg_confidence": 95.0
+    }
+  },
+  "daily": {
+    "2025-05-10": {
+      "total": 3,
+      "categories": {
+        "perro": 3
+      }
+    }
+  },
+  "last_updated": "2025-05-10T22:00:58.236611"
+}

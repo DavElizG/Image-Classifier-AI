@@ -1,57 +1,74 @@
-# Image Classifier AI
+# Clasificador de Imágenes con IA
 
-## Project Overview
-This project is an Image Classifier AI application that allows users to upload images and receive automatic classification into predefined categories. The application utilizes machine learning techniques for image classification and provides an API for interaction.
+## Descripción General
+Este proyecto es una aplicación de Clasificador de Imágenes que permite a los usuarios subir imágenes y recibir una clasificación automática en categorías predefinidas. La aplicación utiliza la API de OpenAI para la clasificación de imágenes y proporciona una API REST para interacción.
 
-## Features
-- Upload images through API endpoints.
-- Automatic classification of images into predefined categories (e.g., dog, cat, car, tree).
-- Return of classification results, including predicted category and confidence level.
-- Error handling and feedback during image processing.
+## Características
+- Subida de imágenes a través de endpoints de API.
+- Clasificación automática de imágenes en categorías predefinidas (perro, gato, auto, árbol, etc.).
+- Devolución de resultados de clasificación, incluyendo categoría predicha y nivel de confianza.
+- Caché de resultados para mejorar el rendimiento en imágenes procesadas previamente.
+- Estadísticas de uso y rendimiento del clasificador.
+- Manejo de errores y retroalimentación durante el procesamiento de imágenes.
 
-## Technologies Used
-- **Backend**: Python (Flask or FastAPI)
-- **Machine Learning**: TensorFlow or PyTorch server-side model
+## Tecnologías Utilizadas
+- **Backend**: Python (Flask)
+- **Clasificación de Imágenes**: API de OpenAI (modelo gpt-4o con capacidades de visión)
+- **Documentación**: Swagger UI
 
-## Project Structure
+## Estructura del Proyecto
 ```
-image-classifier-ai
-├── backend
-│   ├── app.py
-│   ├── models
-│   │   └── image_classifier.py
-│   ├── api
-│   │   ├── __init__.py
-│   │   └── routes.py
-│   ├── utils
-│   │   ├── __init__.py
-│   │   └── image_processing.py
-│   ├── config.py
-│   ├── requirements.txt
-│   └── README.md
-└── README.md
+clasificador-de-imagenes
+└── backend
+    ├── app.py               # Punto de entrada para la aplicación
+    ├── config.py            # Configuración general
+    ├── requirements.txt     # Paquetes requeridos
+    ├── test_api.py          # Script de prueba
+    ├── TESTING.md           # Documentación de pruebas
+    ├── api/                 # Endpoints de API
+    │   ├── __init__.py
+    │   └── routes.py        # Definiciones de rutas de API
+    ├── models/              # Modelos para clasificación
+    │   └── image_classifier.py  # Clasificador con OpenAI
+    ├── static/              # Archivos estáticos
+    │   └── swagger.json     # Documentación de API en Swagger
+    └── utils/               # Funciones de utilidad
+        ├── __init__.py
+        └── image_processing.py  # Utilidades de procesamiento de imágenes
 ```
 
-## Setup Instructions
+## Instrucciones de Configuración
 
 ### Backend
-1. Navigate to the `backend` directory.
-2. Install the required dependencies:
+1. Navegar al directorio `backend`.
+2. Instalar las dependencias requeridas:
    ```
    pip install -r requirements.txt
    ```
-3. Run the backend server:
+3. Configurar la clave API de OpenAI en un archivo `.env` (ver `.env.example`).
+4. Ejecutar el servidor backend:
    ```
    python app.py
    ```
 
-## API Usage
-- Send POST requests to the API endpoint with image data.
-- Receive classification results in JSON format.
-- Example API calls will be provided in future documentation.
+### Tests
+Para ejecutar los tests unitarios:
+```
+cd backend
+python -m unittest discover tests
+```
 
-## Contributing
-Contributions are welcome! Please feel free to submit a pull request or open an issue for any suggestions or improvements.
+## Uso de la API
+- Documentación de API disponible en `/api/docs` cuando el servidor está ejecutándose
+- Probar la API usando el script `test_api.py` incluido
+- Endpoints de ejemplo:
+  - GET `/api/categories`: Obtener todas las categorías disponibles
+  - POST `/api/classify`: Clasificar una imagen subida
+  - GET `/api/stats`: Obtener estadísticas de clasificación
+  - GET `/api/test-openai`: Probar la conexión con la API de OpenAI
 
-## License
-This project is licensed under the MIT License. See the LICENSE file for more details.
+## Contribuciones
+¡Las contribuciones son bienvenidas! Por favor, siéntete libre de enviar un pull request o abrir un issue para cualquier sugerencia o mejora.
+
+## Licencia
+Este proyecto está licenciado bajo la Licencia MIT. Ver el archivo LICENSE para más detalles.
