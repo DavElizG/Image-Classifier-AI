@@ -1,8 +1,40 @@
 {
-  "total_classifications": 3,
+  "total_classifications": 17,
   "categories": {
     "perro": {
-      "count": 3,
+      "count": 5,
+      "avg_confidence": 95.0
+    },
+    "gato": {
+      "count": 4,
+      "avg_confidence": 95.0
+    },
+    "auto": {
+      "count": 1,
+      "avg_confidence": 95.0
+    },
+    "Unknown": {
+      "count": 1,
+      "avg_confidence": 0.0
+    },
+    "\u00e1rbol": {
+      "count": 1,
+      "avg_confidence": 95.0
+    },
+    "alimento": {
+      "count": 1,
+      "avg_confidence": 100.0
+    },
+    "flor": {
+      "count": 2,
+      "avg_confidence": 97.5
+    },
+    "edificio": {
+      "count": 1,
+      "avg_confidence": 95.0
+    },
+    "paisaje": {
+      "count": 1,
       "avg_confidence": 95.0
     }
   },
@@ -12,7 +44,21 @@
       "categories": {
         "perro": 3
       }
+    },
+    "2025-05-12": {
+      "total": 14,
+      "categories": {
+        "gato": 4,
+        "auto": 1,
+        "Unknown": 1,
+        "perro": 2,
+        "\u00e1rbol": 1,
+        "alimento": 1,
+        "flor": 2,
+        "edificio": 1,
+        "paisaje": 1
+      }
     }
   },
-  "last_updated": "2025-05-10T22:00:58.236611"
+  "last_updated": "2025-05-12T19:33:38.576095"
 }

@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 from collections import defaultdict
 from config import Config
 from utils.imagebb import upload_image_to_imagebb
+from utils.image_url_helpers import prepare_image_urls_for_frontend
 
 class ClassificationStats:
     """
@@ -296,7 +297,6 @@ class ClassificationStats:
                         # Check if the corresponding image exists
                         image_id = metadata.get('id')
                         image_path = os.path.join(self.history_dir, f"{image_id}.jpg")
-                        
                         if os.path.exists(image_path):
                             # Read image as base64 for sending to frontend
                             with open(image_path, 'rb') as img_file:
@@ -309,8 +309,11 @@ class ClassificationStats:
                         # Use the ImageBB URLs directly
                         metadata['image_data'] = metadata['image_url']
                     
+                    # Process the metadata to ensure all image URLs are properly set
+                    processed_metadata = prepare_image_urls_for_frontend(metadata)
+                    
                     # Add to history list
-                    history.append(metadata)
+                    history.append(processed_metadata)
                 except Exception as e:
                     print(f"Error processing history file {metadata_file}: {e}")
                     continue

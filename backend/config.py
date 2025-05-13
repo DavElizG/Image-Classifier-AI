@@ -20,10 +20,35 @@ class Config:
         'perro', 'gato', 'auto', 'árbol', 'ave', 'persona', 
         'edificio', 'flor', 'paisaje', 'alimento'
     ]
-    
-    # Cache configuration
+      # Cache configuration
     USE_CACHE = os.environ.get('USE_CACHE', 'True') == 'True'
     CACHE_EXPIRY_HOURS = int(os.environ.get('CACHE_EXPIRY_HOURS') or 24)
     
-    # Stats configuration
+    # ImageBB Configuration
+    IMAGEBB_API_KEY = os.environ.get('IMAGEBB_API_KEY', 'bf79f82c0d0d19e2d9c15e6247dca5f7')    # Stats configuration
     STATS_ENABLED = os.environ.get('STATS_ENABLED', 'True') == 'True'
+    
+    # Database configuration
+    # Use "file" for file-based storage or "mongodb" for MongoDB
+    DB_STORAGE_TYPE = os.environ.get('DB_STORAGE_TYPE', 'mongodb')
+    
+    # MongoDB configuration
+    # Try different MongoDB connection methods in order of preference
+    # 1. Direct MONGO_URI 
+    # 2. Railway MongoDB URLs
+    # 3. Manual construction from credentials
+    MONGO_URI = os.environ.get('MONGO_URI') or os.environ.get('MONGO_URL') or os.environ.get('MONGO_PUBLIC_URL')
+    
+    # Fallback to manual construction if no direct URI is provided
+    if not MONGO_URI:
+        mongo_host = os.environ.get('MONGOHOST', 'mongodb.railway.internal')
+        mongo_port = os.environ.get('MONGOPORT', '27017')
+        mongo_user = os.environ.get('MONGOUSER', 'mongo')
+        mongo_password = os.environ.get('MONGOPASSWORD', 'bWgsojLFnVDtiYwGqFyQbSdqSuyqttCY')
+        
+        if mongo_user and mongo_password:
+            MONGO_URI = f"mongodb://{mongo_user}:{mongo_password}@{mongo_host}:{mongo_port}"
+        else:
+            MONGO_URI = f"mongodb://{mongo_host}:{mongo_port}"
+    
+    MONGO_DB_NAME = os.environ.get('MONGO_DB_NAME', 'image_classifier_db')

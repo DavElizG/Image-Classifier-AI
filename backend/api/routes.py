@@ -1,19 +1,38 @@
 from flask import Blueprint, request, jsonify, current_app
 from models.image_classifier import ImageClassifier
 from utils.image_processing import validate_image
-from utils.stats import ClassificationStats
+from utils.stats_new import ClassificationStats
 from config import Config
 import io
 import os
 from openai import OpenAI
+from flask_cors import CORS
+
+# Import MongoDB stats manager if needed
+if Config.DB_STORAGE_TYPE == 'mongodb':
+    from utils.mongodb_stats import MongoDBStats
 
 api = Blueprint('api', __name__, url_prefix='/api')
+# Habilitar CORS específicamente para este blueprint
+CORS(api, resources={r"/*": {
+    "origins": "*", 
+    "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    "allow_headers": "*",
+    "expose_headers": ["Content-Type", "Authorization"],
+    "supports_credentials": True
+}})
 
 # Initialize the classifier
 classifier = None
 
 # Initialize stats tracker
-stats = ClassificationStats() if Config.STATS_ENABLED else None
+if Config.STATS_ENABLED:
+    if Config.DB_STORAGE_TYPE == 'mongodb':
+        stats = MongoDBStats()
+    else:
+        stats = ClassificationStats()
+else:
+    stats = None
 
 def get_classifier():
     global classifier
@@ -129,7 +148,7 @@ def get_categories():
     """
     return jsonify({'categories': Config.IMAGE_CATEGORIES}), 200
 
-@api.route('/test-openai', methods=['GET'])
+@api.route('/test-openai', methods=['GET', 'OPTIONS'])
 def test_openai():
     """
     Endpoint to test OpenAI API connectivity.
@@ -137,6 +156,14 @@ def test_openai():
     Returns:
     - JSON with 'status' field indicating if the API is working
     """
+    # Manejar solicitudes OPTIONS (preflight CORS)
+    if request.method == 'OPTIONS':
+        resp = jsonify({'success': True})
+        resp.headers.add('Access-Control-Allow-Origin', '*')
+        resp.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+        resp.headers.add('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
+        return resp
+        
     try:
         # Initialize OpenAI client
         client = OpenAI(api_key=Config.OPENAI_API_KEY)
@@ -152,11 +179,16 @@ def test_openai():
         )
         
         # If we got a response, the API is working
-        return jsonify({
+        resp = jsonify({
             'status': 'OK',
             'message': 'OpenAI API is working correctly',
             'model_response': response.choices[0].message.content
-        }), 200
+        })
+        # Añadir encabezados CORS adicionales
+        resp.headers.add('Access-Control-Allow-Origin', '*')
+        resp.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+        resp.headers.add('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
+        return resp, 200
         
     except Exception as e:
         # If there was an error, the API is not working

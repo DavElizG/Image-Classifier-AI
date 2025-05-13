@@ -4,15 +4,30 @@ from config import Config
 from flask_swagger_ui import get_swaggerui_blueprint
 from flask_cors import CORS
 import os
+import atexit
 
 def create_app():
     app = Flask(__name__)
     
-    # Enable CORS for all routes
-    CORS(app)
+    # Configuración de CORS más permisiva para resolver problemas de CORS
+    app.config['CORS_HEADERS'] = 'Content-Type'
+    CORS(app, resources={r"/*": {
+        "origins": "*", 
+        "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        "allow_headers": "*",
+        "supports_credentials": True,
+        "expose_headers": ["Content-Type", "X-CSRFToken"]
+    }})
     
     # Load configuration from Config class
     app.config.from_object(Config)
+    
+    # Initialize database if using MongoDB
+    if Config.DB_STORAGE_TYPE == 'mongodb':
+        from utils.db import init_db, close_mongo_connection
+        init_db()
+        # Register function to close MongoDB connection on application shutdown
+        atexit.register(close_mongo_connection)
     
     # Register the API blueprint
     app.register_blueprint(api)

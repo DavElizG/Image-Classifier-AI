@@ -16,12 +16,15 @@ Este backend sirve como el núcleo del proyecto de Clasificador de Imágenes con
 - OpenAI Vision API (modelo GPT-4 Vision)
 - Pillow (Biblioteca de procesamiento de imágenes)
 - python-dotenv (para variables de entorno)
+- MongoDB (para almacenamiento de datos)
+- ImageBB API (para almacenamiento de imágenes)
 
 ## Instrucciones de configuración
 
 ### Prerrequisitos
 - Python 3.7 o superior
 - pip (instalador de paquetes de Python)
+- MongoDB (opcional, para almacenamiento de datos)
 
 ### Instalación
 1. Clonar el repositorio:
@@ -86,7 +89,51 @@ Este backend sirve como el núcleo del proyecto de Clasificador de Imágenes con
 - `models/image_classifier.py`: Contiene la lógica de clasificación utilizando OpenAI.
 - `api/routes.py`: Define los endpoints de la API.
 - `utils/image_processing.py`: Funciones de utilidad para el procesamiento de imágenes.
+- `utils/mongodb_stats.py`: Gestor de estadísticas basado en MongoDB.
+- `utils/stats_new.py`: Gestor de estadísticas basado en archivos.
+- `utils/imagebb.py`: Integración con ImageBB para almacenamiento de imágenes.
+- `utils/db.py`: Utilidades para conexión a MongoDB.
+- `utils/setup_mongodb.py`: Script para configurar MongoDB.
+- `utils/migrate_to_mongodb.py`: Script para migrar datos a MongoDB.
 - `config.py`: Configuración de la aplicación.
+
+## Configuración de la base de datos
+
+La aplicación soporta dos modos de almacenamiento de datos:
+
+### 1. Almacenamiento basado en archivos (predeterminado)
+- Las estadísticas se almacenan en `stats/classification_stats.json`
+- Los metadatos de las imágenes se almacenan en `stats/history/*.json`
+- Las imágenes se suben a ImageBB
+
+### 2. Almacenamiento en MongoDB
+- Las estadísticas y metadatos se almacenan en colecciones de MongoDB
+- Las imágenes se siguen subiendo a ImageBB
+
+Para configurar MongoDB:
+
+1. Ejecutar el script de configuración:
+   ```
+   python utils/setup_mongodb.py
+   ```
+   El script te guiará a través del proceso de configuración.
+
+2. Alternativamentee, puedes configurar manualmente las siguientes variables en el archivo `.env`:
+   ```
+   DB_STORAGE_TYPE=mongodb
+   MONGO_URI=mongodb://localhost:27017  # O tu URI de MongoDB Atlas
+   MONGO_DB_NAME=image_classifier_db
+   ```
+
+3. Para migrar datos existentes de archivos a MongoDB:
+   ```
+   python utils/migrate_to_mongodb.py
+   ```
+
+### Estructura de la base de datos MongoDB
+- **Colección `classifications`**: Almacena registros individuales de clasificación con metadatos de imágenes
+- **Colección `statistics`**: Almacena estadísticas globales agregadas
+- **Colección `daily_stats`**: Almacena estadísticas diarias de clasificación
 
 ## Categorías predefinidas
 - perro

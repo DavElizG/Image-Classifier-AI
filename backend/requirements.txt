@@ -7,3 +7,4 @@ openai
 requests
 flask-swagger-ui
 flask-cors
+pymongo==4.6.0
