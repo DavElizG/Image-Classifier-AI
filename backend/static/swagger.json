@@ -1,0 +1,390 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "API de Clasificador de Imágenes",
+    "description": "API para clasificar imágenes usando OpenAI Vision",
+    "version": "1.0.0"
+  },
+  "basePath": "/",
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "multipart/form-data"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/api/classify": {
+      "post": {
+        "summary": "Clasifica una imagen en categorías predefinidas",
+        "description": "Envía una imagen a través de multipart/form-data y recibe la clasificación",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "file",
+            "in": "formData",
+            "description": "Archivo de imagen para clasificar",
+            "required": true,
+            "type": "file"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Clasificación exitosa",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "category": {
+                  "type": "string",
+                  "description": "Categoría identificada en la imagen"
+                },
+                "confidence": {
+                  "type": "number",
+                  "format": "float",
+                  "description": "Nivel de confianza de la predicción (0-100)"
+                },
+                "categories": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Lista de todas las categorías disponibles"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error de validación",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "description": "Mensaje de error descriptivo"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno del servidor",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "description": "Mensaje de error descriptivo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/categories": {
+      "get": {
+        "summary": "Obtiene todas las categorías disponibles",
+        "description": "Retorna un listado de todas las categorías predefinidas para clasificación",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Lista de categorías",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "categories": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Lista de categorías disponibles"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/test-openai": {
+      "get": {
+        "summary": "Prueba la conexión con la API de OpenAI",
+        "description": "Realiza una petición de prueba a la API de OpenAI para verificar la conectividad",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Conexión exitosa",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "description": "Estado de la conexión (OK)"
+                },
+                "message": {
+                  "type": "string",
+                  "description": "Mensaje descriptivo"
+                },
+                "model_response": {
+                  "type": "string",
+                  "description": "Respuesta del modelo de OpenAI"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error de conexión",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "description": "Estado de la conexión (ERROR)"
+                },
+                "message": {
+                  "type": "string",
+                  "description": "Mensaje de error descriptivo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },    "/api/stats": {
+      "get": {
+        "summary": "Obtiene estadísticas de clasificación",
+        "description": "Devuelve estadísticas sobre las clasificaciones realizadas",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "days",
+            "in": "query",
+            "description": "Número de días a incluir en las estadísticas diarias (1-30)",
+            "required": false,
+            "type": "integer",
+            "default": 7
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Estadísticas de clasificación",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "stats": {
+                  "type": "object",
+                  "properties": {
+                    "total_classifications": {
+                      "type": "integer",
+                      "description": "Número total de clasificaciones realizadas"
+                    },
+                    "categories": {
+                      "type": "object",
+                      "description": "Estadísticas por categoría"
+                    },
+                    "daily": {
+                      "type": "object",
+                      "description": "Estadísticas diarias"
+                    },
+                    "last_updated": {
+                      "type": "string",
+                      "description": "Fecha de última actualización"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error en la solicitud",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "description": "Mensaje de error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error del servidor",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "description": "Mensaje de error"
+                },
+                "details": {
+                  "type": "string",
+                  "description": "Detalles adicionales del error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/history": {
+      "get": {
+        "summary": "Obtiene el historial de clasificaciones con imágenes",
+        "description": "Devuelve un historial de las imágenes clasificadas con sus resultados",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Número máximo de entradas a devolver (1-50)",
+            "required": false,
+            "type": "integer",
+            "default": 20
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Desplazamiento para la paginación",
+            "required": false,
+            "type": "integer",
+            "default": 0
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "description": "Filtrar por categoría (opcional)",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Historial de clasificaciones",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "history": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "Identificador único de la clasificación"
+                      },
+                      "timestamp": {
+                        "type": "string",
+                        "description": "Fecha y hora de la clasificación"
+                      },
+                      "category": {
+                        "type": "string",
+                        "description": "Categoría asignada a la imagen"
+                      },
+                      "confidence": {
+                        "type": "number",
+                        "format": "float",
+                        "description": "Nivel de confianza de la clasificación (0-100)"
+                      },
+                      "original_filename": {
+                        "type": "string",
+                        "description": "Nombre original del archivo"
+                      },
+                      "image_data": {
+                        "type": "string",
+                        "description": "Imagen en formato base64 (data URI)"
+                      }
+                    }
+                  }
+                },
+                "total": {
+                  "type": "integer",
+                  "description": "Número total de entradas en esta página"
+                },
+                "limit": {
+                  "type": "integer",
+                  "description": "Límite de entradas solicitado"
+                },
+                "offset": {
+                  "type": "integer",
+                  "description": "Desplazamiento solicitado"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error en la solicitud",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "description": "Mensaje de error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error del servidor",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "description": "Mensaje de error"
+                },
+                "details": {
+                  "type": "string",
+                  "description": "Detalles adicionales del error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "ClassificationResponse": {
+      "type": "object",
+      "properties": {
+        "category": {
+          "type": "string",
+          "description": "Categoría identificada en la imagen"
+        },
+        "confidence": {
+          "type": "number",
+          "format": "float",
+          "description": "Nivel de confianza de la predicción (0-100)"
+        },
+        "categories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Lista de todas las categorías disponibles"
+        }
+      }
+    },
+    "ErrorResponse": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string",
+          "description": "Mensaje de error descriptivo"
+        }
+      }
+    }
+  }
+}
