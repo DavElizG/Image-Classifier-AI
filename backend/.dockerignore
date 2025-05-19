@@ -1,0 +1,34 @@
+# Archivos de entorno
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# Archivos de caché y directorios generados
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+
+# Archivos de datos y logs
+cache/*
+stats/*
+*.log
+
+# Directorios de desarrollo
+.git
+.github
+venv/
+env/
+
+# Archivos Docker (no necesarios dentro del contenedor)
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Otros
+.DS_Store
+.vscode/
+.idea/
