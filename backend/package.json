@@ -1,0 +1,12 @@
+{
+  "name": "image-classifier-ai",
+  "version": "1.0.0",
+  "description": "Image Classifier AI API",
+  "main": "app_fixed.py",
+  "scripts": {
+    "start": "python app_fixed.py"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
