@@ -4,9 +4,9 @@
     "title": "API de Clasificador de Imágenes",
     "description": "API para clasificar imágenes usando OpenAI Vision",
     "version": "1.0.0"
-  },
-  "basePath": "/",
+  },  "basePath": "/",
   "schemes": [
+    "http",
     "https"
   ],
   "consumes": [

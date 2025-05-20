@@ -16,13 +16,16 @@ def get_mongo_client():
         MongoClient: MongoDB client instance
     """
     global _client
-    if _client is None:
-        # Try to use the provided Railway MongoDB connection info if available
+    if _client is None:        # Try to use the provided Railway MongoDB connection info if available
         mongo_public_url = os.environ.get('MONGO_PUBLIC_URL')
         mongo_url = os.environ.get('MONGO_URL')
         
-        # Use the Railway deployment URLs if available
-        if mongo_url:
+        # Cuando se ejecuta localmente, siempre usar la URL pública
+        if os.environ.get('RAILWAY_ENVIRONMENT') != 'production' and mongo_public_url:
+            print('Usando MongoDB URL pública para entorno local')
+            mongo_uri = mongo_public_url
+        # En Railway, usar la URL interna para mejor rendimiento
+        elif mongo_url and os.environ.get('RAILWAY_ENVIRONMENT') == 'production':
             mongo_uri = mongo_url
         elif mongo_public_url:
             mongo_uri = mongo_public_url

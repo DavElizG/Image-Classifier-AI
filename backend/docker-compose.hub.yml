@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  # Servicio de la API de clasificación de imágenes
+  api:
+    image: jdgua/image-classifier-ai:latest  # Este nombre sería tu repositorio en Docker Hub
+    container_name: image-classifier-api
+    ports:
+      - "5000:5000"
+    environment:
+      - DEBUG=True
+      - HOST=0.0.0.0
+      - PORT=5000
+      - MONGO_URI=${MONGO_URI}
+      - MONGO_DB_NAME=ImageClassifier
+      - DB_STORAGE_TYPE=mongodb
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    volumes:
+      - ./cache:/app/cache
+      - ./stats:/app/stats
+    restart: unless-stopped
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

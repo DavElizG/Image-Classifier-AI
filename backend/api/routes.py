@@ -13,14 +13,7 @@ if Config.DB_STORAGE_TYPE == 'mongodb':
     from utils.mongodb_stats import MongoDBStats
 
 api = Blueprint('api', __name__, url_prefix='/api')
-# Habilitar CORS específicamente para este blueprint
-CORS(api, resources={r"/*": {
-    "origins": "*", 
-    "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    "allow_headers": "*",
-    "expose_headers": ["Content-Type", "Authorization"],
-    "supports_credentials": True
-}})
+# La configuración CORS se maneja a nivel de aplicación en app.py
 
 # Initialize the classifier
 classifier = None
@@ -148,7 +141,7 @@ def get_categories():
     """
     return jsonify({'categories': Config.IMAGE_CATEGORIES}), 200
 
-@api.route('/test-openai', methods=['GET', 'OPTIONS'])
+@api.route('/test-openai', methods=['GET'])
 def test_openai():
     """
     Endpoint to test OpenAI API connectivity.
@@ -156,14 +149,6 @@ def test_openai():
     Returns:
     - JSON with 'status' field indicating if the API is working
     """
-    # Manejar solicitudes OPTIONS (preflight CORS)
-    if request.method == 'OPTIONS':
-        resp = jsonify({'success': True})
-        resp.headers.add('Access-Control-Allow-Origin', '*')
-        resp.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
-        resp.headers.add('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
-        return resp
-        
     try:
         # Initialize OpenAI client
         client = OpenAI(api_key=Config.OPENAI_API_KEY)
@@ -179,16 +164,11 @@ def test_openai():
         )
         
         # If we got a response, the API is working
-        resp = jsonify({
+        return jsonify({
             'status': 'OK',
             'message': 'OpenAI API is working correctly',
             'model_response': response.choices[0].message.content
-        })
-        # Añadir encabezados CORS adicionales
-        resp.headers.add('Access-Control-Allow-Origin', '*')
-        resp.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
-        resp.headers.add('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
-        return resp, 200
+        }), 200
         
     except Exception as e:
         # If there was an error, the API is not working
