@@ -1,0 +1,27 @@
+# Dockerfile.railway - Optimizado para despliegue en Railway
+FROM python:3.10-slim
+
+WORKDIR /app
+
+# Instalar dependencias esenciales
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libffi-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copiar solo los archivos necesarios primero
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copiar el resto de la aplicación
+COPY . .
+
+# Crear directorios necesarios
+RUN mkdir -p static cache stats/history
+
+# Variables de entorno
+ENV PYTHONUNBUFFERED=1
+ENV PORT=5000
+
+# Comando para ejecutar la aplicación
+CMD ["python", "app_fixed.py"]

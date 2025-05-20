@@ -1,10 +1,10 @@
 {
   "build": {
     "builder": "NIXPACKS",
-    "buildCommand": "pip install -r requirements.txt"
+    "buildCommand": "python3 -m pip install --upgrade pip && python3 -m pip install -r requirements.txt"
   },
   "deploy": {
-    "startCommand": "python app_fixed.py",
+    "startCommand": "python3 app_fixed.py",
     "healthcheckPath": "/",
     "healthcheckTimeout": 300,
     "restartPolicyType": "ON_FAILURE"
