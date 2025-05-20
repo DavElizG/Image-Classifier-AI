@@ -1,10 +1,10 @@
 {
   "build": {
     "builder": "NIXPACKS",
-    "buildCommand": "python3 -m pip install --upgrade pip && python3 -m pip install -r requirements.txt"
+    "buildCommand": "chmod +x build.sh && ./build.sh"
   },
   "deploy": {
-    "startCommand": "python3 app_fixed.py",
+    "startCommand": "chmod +x railway_start.sh && ./railway_start.sh",
     "healthcheckPath": "/",
     "healthcheckTimeout": 300,
     "restartPolicyType": "ON_FAILURE"
