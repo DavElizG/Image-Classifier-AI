@@ -1,8 +1,8 @@
 [phases.setup]
-aptPkgs = ["python3", "python3-pip", "python3-venv", "gcc"]
+aptPkgs = ["python3", "python3-pip", "python3-venv", "python3-dev", "gcc", "build-essential"]
 
 [phases.install]
-cmds = ["python -m venv /opt/venv", ". /opt/venv/bin/activate", "pip install -r requirements.txt"]
+cmds = ["python3 -m venv /opt/venv", "source /opt/venv/bin/activate", "pip3 install --upgrade pip", "pip3 install -r requirements.txt"]
 
 [start]
-cmd = "python app_fixed.py"
+cmd = "python3 app_fixed.py"
