@@ -10,7 +10,7 @@ services:  # Servicio de la API de clasificación de imágenes
       - DEBUG=True
       - HOST=0.0.0.0
       - PORT=5000
-      - MONGO_URI=mongodb://mongo:hkInsUPTeriCHoxJbtyUcgAPTCRSugMZ@maglev.proxy.rlwy.net:19677
+      - MONGO_URI=${MONGO_URI}
       - MONGO_DB_NAME=ImageClassifier
       - DB_STORAGE_TYPE=mongodb
       - OPENAI_API_KEY=${OPENAI_API_KEY}

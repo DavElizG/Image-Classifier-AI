@@ -26,6 +26,15 @@ IF "%OPENAI_API_KEY%"=="" (
     echo API key de OpenAI detectada en variables de entorno.
 )
 
+:: Verificar si la variable de entorno MONGO_URI está configurada
+IF "%MONGO_URI%"=="" (
+    echo Advertencia: MONGO_URI no está configurada.
+    echo Por favor, ingresa tu URI de conexión a MongoDB:
+    set /p MONGO_URI="> "
+) ELSE (
+    echo URI de MongoDB detectada en variables de entorno.
+)
+
 echo Construyendo imagen de Docker...
 docker-compose build
 

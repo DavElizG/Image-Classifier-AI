@@ -34,6 +34,17 @@ else
     echo -e "${GREEN}API key de OpenAI detectada en variables de entorno.${NC}"
 fi
 
+# Verificar si la variable de entorno MONGO_URI está configurada
+if [ -z "$MONGO_URI" ]
+then
+    echo -e "${YELLOW}Advertencia: MONGO_URI no está configurada.${NC}"
+    echo -e "${YELLOW}Por favor, ingresa tu URI de conexión a MongoDB:${NC}"
+    read -s mongo_uri
+    export MONGO_URI=$mongo_uri
+else
+    echo -e "${GREEN}URI de MongoDB detectada en variables de entorno.${NC}"
+fi
+
 echo -e "${GREEN}Construyendo imagen de Docker...${NC}"
 docker-compose build
 

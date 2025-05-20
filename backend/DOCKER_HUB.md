@@ -42,15 +42,19 @@ Una vez publicada la imagen, otros usuarios pueden utilizarla con el siguiente c
 ```bash
 docker run -d -p 5000:5000 \
   -e OPENAI_API_KEY=your_api_key \
-  -e MONGO_URI=your_mongo_uri \
+  -e MONGO_URI=your_mongodb_connection_string \
   -e MONGO_DB_NAME=your_db_name \
   -e DB_STORAGE_TYPE=mongodb \
   yourusername/image-classifier-ai:latest
 ```
 
-O utilizando el archivo `docker-compose.hub.yml` incluido:
+O utilizando el archivo `docker-compose.hub.yml` incluido, asegurándose primero de configurar las variables de entorno necesarias:
 
 ```bash
+# Configura las variables de entorno requeridas
+export OPENAI_API_KEY=your_api_key
+export MONGO_URI=your_mongodb_connection_string
+
 # Edita docker-compose.hub.yml para cambiar 'yourusername' por tu nombre de usuario
 docker-compose -f docker-compose.hub.yml up -d
 ```

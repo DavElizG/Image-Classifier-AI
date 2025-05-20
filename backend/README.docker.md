@@ -7,17 +7,20 @@ Este documento explica cómo usar Docker para ejecutar la aplicación Image Clas
 - Docker instalado en tu sistema ([Instalar Docker](https://docs.docker.com/get-docker/))
 - Docker Compose instalado en tu sistema ([Instalar Docker Compose](https://docs.docker.com/compose/install/))
 - Clave API de OpenAI válida
+- Conexión a MongoDB (URI de conexión)
 
 ## Configuración rápida
 
-1. Configura tu clave API de OpenAI:
+1. Configura tus variables de entorno:
 
 ```bash
 # Windows PowerShell
 $env:OPENAI_API_KEY="tu-clave-api-openai"
+$env:MONGO_URI="tu-uri-de-conexion-mongodb"
 
 # Linux/macOS
 export OPENAI_API_KEY="tu-clave-api-openai"
+export MONGO_URI="tu-uri-de-conexion-mongodb"
 ```
 
 2. Inicia la aplicación:
