@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, send_from_directory
+from flask import Flask, jsonify, send_from_directory, request
 from api.routes import api
 from config import Config
 from flask_swagger_ui import get_swaggerui_blueprint
@@ -8,11 +8,10 @@ import atexit
 
 def create_app():
     app = Flask(__name__)
-    
-    # Configuración de CORS más permisiva para resolver problemas de CORS
+      # Configuración de CORS más permisiva para resolver problemas de CORS
     app.config['CORS_HEADERS'] = 'Content-Type'
     CORS(app, resources={r"/*": {
-        "origins": "*", 
+        "origins": ["http://localhost:5173", "http://127.0.0.1:5173", "*"], 
         "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         "allow_headers": ["Content-Type", "Authorization", "X-Requested-With", "Accept", "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers"],
         "supports_credentials": True,
@@ -92,13 +91,18 @@ def create_app():
         return jsonify({
             'error': 'Error interno del servidor'
         }), 500
-    
-    # Manejador global para asegurarnos que todos los endpoints respetan CORS
+      # Manejador global para asegurarnos que todos los endpoints respetan CORS
     @app.after_request
     def add_cors_headers(response):
-        response.headers.add('Access-Control-Allow-Origin', '*')
+        origin = request.headers.get('Origin')
+        # Si la solicitud viene de localhost:5173, permite ese origen específicamente
+        if origin and ('http://localhost:5173' in origin or 'http://127.0.0.1:5173' in origin):
+            response.headers.add('Access-Control-Allow-Origin', origin)
+        else:
+            response.headers.add('Access-Control-Allow-Origin', '*')
         response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization,X-Requested-With,Accept,Origin')
         response.headers.add('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS')
+        response.headers.add('Access-Control-Allow-Credentials', 'true')
         return response
     
     return app
