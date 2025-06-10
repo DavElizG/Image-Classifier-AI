@@ -8,7 +8,8 @@ import atexit
 
 def create_app():
     app = Flask(__name__)
-      # Configuración de CORS optimizada para producción
+    
+    # Configuración de CORS optimizada para producción
     CORS(app, resources={r"/*": {
         "origins": [
             "http://localhost:5173",
@@ -67,7 +68,8 @@ def create_app():
     def home():
         return jsonify({
             "message": "Bienvenido a la API de Clasificación de Imágenes", 
-            "version": "1.0",            "endpoints": {
+            "version": "1.0",
+            "endpoints": {
                 "/api/classify": "POST - Clasifica una imagen en una de las categorías predefinidas",
                 "/api/categories": "GET - Obtiene la lista de categorías disponibles",
                 "/api/stats": "GET - Obtiene estadísticas de clasificación",
