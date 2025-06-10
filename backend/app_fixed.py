@@ -8,15 +8,15 @@ import atexit
 
 def create_app():
     app = Flask(__name__)
-    
-    # Configuración de CORS optimizada para producción
+      # Configuración de CORS optimizada para producción
     CORS(app, resources={r"/*": {
         "origins": [
             "http://localhost:5173",
             "http://127.0.0.1:5173",
+            "http://localhost:3000",
             "https://proyectofundweb.vercel.app",
             "https://*.railway.app"
-        ], 
+        ],
         "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         "allow_headers": ["Content-Type", "Authorization", "X-Requested-With", "Accept", "Origin"],
         "supports_credentials": True,
