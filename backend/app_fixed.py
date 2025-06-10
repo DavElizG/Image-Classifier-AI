@@ -8,14 +8,18 @@ import atexit
 
 def create_app():
     app = Flask(__name__)
-      # Configuración de CORS más permisiva para resolver problemas de CORS
-    app.config['CORS_HEADERS'] = 'Content-Type'
+    
+    # Configuración de CORS optimizada para producción
     CORS(app, resources={r"/*": {
-        "origins": ["http://localhost:5173", "http://127.0.0.1:5173", "*"], 
+        "origins": [
+            "http://localhost:5173",
+            "http://127.0.0.1:5173",
+            "https://proyectofundweb.vercel.app",
+            "https://*.railway.app"
+        ], 
         "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-        "allow_headers": ["Content-Type", "Authorization", "X-Requested-With", "Accept", "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers"],
+        "allow_headers": ["Content-Type", "Authorization", "X-Requested-With", "Accept", "Origin"],
         "supports_credentials": True,
-        "expose_headers": ["Content-Type", "X-CSRFToken", "Authorization"],
         "max_age": 3600
     }})
     
@@ -84,26 +88,21 @@ def create_app():
     def not_found(error):
         return jsonify({
             'error': 'Endpoint no encontrado'
-        }), 404
+                }), 404
     
     @app.errorhandler(500)
     def internal_server_error(error):
         return jsonify({
             'error': 'Error interno del servidor'
         }), 500
-      # Manejador global para asegurarnos que todos los endpoints respetan CORS
-    @app.after_request
-    def add_cors_headers(response):
-        origin = request.headers.get('Origin')
-        # Si la solicitud viene de localhost:5173, permite ese origen específicamente
-        if origin and ('http://localhost:5173' in origin or 'http://127.0.0.1:5173' in origin):
-            response.headers.add('Access-Control-Allow-Origin', origin)
-        else:
-            response.headers.add('Access-Control-Allow-Origin', '*')
-        response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization,X-Requested-With,Accept,Origin')
-        response.headers.add('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS')
-        response.headers.add('Access-Control-Allow-Credentials', 'true')
-        return response
+    
+    # Agregar endpoint de health check para Railway
+    @app.route('/health')
+    def health_check():
+        return jsonify({
+            'status': 'healthy',
+            'message': 'API funcionando correctamente'
+        }), 200
     
     return app
 

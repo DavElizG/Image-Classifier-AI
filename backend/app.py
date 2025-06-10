@@ -9,14 +9,17 @@ import atexit
 def create_app():
     app = Flask(__name__)
     
-    # Configuración de CORS más permisiva para resolver problemas de CORS
-    app.config['CORS_HEADERS'] = 'Content-Type'
+    # Configuración de CORS optimizada para producción
     CORS(app, resources={r"/*": {
-        "origins": "*", 
+        "origins": [
+            "http://localhost:5173",
+            "http://127.0.0.1:5173",
+            "https://proyectofundweb.vercel.app",
+            "https://*.railway.app"
+        ], 
         "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-        "allow_headers": ["Content-Type", "Authorization", "X-Requested-With", "Accept", "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers"],
+        "allow_headers": ["Content-Type", "Authorization", "X-Requested-With", "Accept", "Origin"],
         "supports_credentials": True,
-        "expose_headers": ["Content-Type", "X-CSRFToken", "Authorization"],
         "max_age": 3600
     }})
     
@@ -64,8 +67,7 @@ def create_app():
     def home():
         return jsonify({
             "message": "Bienvenido a la API de Clasificación de Imágenes", 
-            "version": "1.0",
-            "endpoints": {
+            "version": "1.0",            "endpoints": {
                 "/api/classify": "POST - Clasifica una imagen en una de las categorías predefinidas",
                 "/api/categories": "GET - Obtiene la lista de categorías disponibles",
                 "/api/stats": "GET - Obtiene estadísticas de clasificación",
@@ -93,13 +95,13 @@ def create_app():
             'error': 'Error interno del servidor'
         }), 500
     
-    # Manejador global para asegurarnos que todos los endpoints respetan CORS
-    @app.after_request
-    def add_cors_headers(response):
-        response.headers.add('Access-Control-Allow-Origin', '*')
-        response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization,X-Requested-With,Accept,Origin')
-        response.headers.add('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS')
-        return response
+    # Agregar endpoint de health check para Railway
+    @app.route('/health')
+    def health_check():
+        return jsonify({
+            'status': 'healthy',
+            'message': 'API funcionando correctamente'
+        }), 200
     
     return app
 
