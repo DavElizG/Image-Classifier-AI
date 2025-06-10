@@ -8,11 +8,10 @@ import atexit
 
 def create_app():
     app = Flask(__name__)
-    
-    # Configuración de CORS más permisiva para resolver problemas de CORS
+      # Configuración de CORS más permisiva para resolver problemas de CORS
     app.config['CORS_HEADERS'] = 'Content-Type'
     CORS(app, resources={r"/*": {
-        "origins": "*", 
+        "origins": ["*", "http://localhost:3000", "https://proyectofundweb.vercel.app"], 
         "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         "allow_headers": ["Content-Type", "Authorization", "X-Requested-With", "Accept", "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers"],
         "supports_credentials": True,
